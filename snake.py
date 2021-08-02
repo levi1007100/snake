@@ -3,7 +3,8 @@
 #don't bump into black
 #eat red
 #don't bump into wall
-import pygame,sys,random,os
+
+import pygame,sys,random,os,time
 
 clock=pygame.time.Clock()
 
@@ -14,6 +15,7 @@ pygame.display.set_caption("snake")
 
 WINDOW_SIZE=(800,800)
 screen=pygame.display.set_mode(WINDOW_SIZE,0,32)
+
 
 
 
@@ -58,7 +60,7 @@ def render_field():
             if(field[row][column]=="#"):
                 color=(0,0,0)
             if(field[row][column]=="*"):
-                color=(255,0,0)
+                color=fruit_color
             pygame.draw.rect(screen,color,pygame.Rect(WINDOW_SIZE[1]/column_length*column,
             WINDOW_SIZE[0]/row_length*row,WINDOW_SIZE[1]/column_length,
             WINDOW_SIZE[0]/row_length))
@@ -107,14 +109,19 @@ def check_for_collisions():
     return False
 
 def grow_snake():
+    global score
     snake_body.append([0,0])
+    score+=1
 
 def generate_fruit():
+    global fruit_color
     row=random.randint(0,row_length-1)
     column=random.randint(0,column_length-1)
     while field[row][column]!=".":
         row=random.randint(0,row_length-1)
         column=random.randint(0,column_length-1)
+
+    fruit_color=(random.randint(200,255),0,0)
     field[row][column]="*"
 
 def determine_heading():
@@ -131,12 +138,16 @@ def determine_heading():
         if(snake_body[0][2]!="east"):
             snake_body[0][2]=arrow_value
 
-
+fruit_color=(255,0,0)
 arrow_value="east"
 field=load_map(r"C:\homemade_games\Snake\field")
 row_length=len(field)
 column_length=len(field[0])
 snake_body=define_snake_body()
+
+score = 0
+font = pygame.font.SysFont(None, 100)
+
 
 while 1:
     screen.fill((0,0,0))
@@ -168,4 +179,23 @@ while 1:
     insert_snake()
     render_field()
     pygame.display.update()
-    clock.tick(8)
+    clock.tick(9)
+fill_collor=[255-score*4,255-score*4,255-score*4]
+
+score_collor=[255/(score+1),16*score,16*score]
+for ind in range(0,3,1):
+    if(score_collor[ind]>255):
+        score_collor[ind]=255
+    if(score_collor[ind]<1):
+        score_collor[ind]=1
+    if(fill_collor[ind]>255):
+        fill_collor[ind]=255
+    if(fill_collor[ind]<1):
+        fill_collor[ind]=1
+screen.fill(fill_collor)
+img = font.render('SCORE : '+str(score), True,(score_collor) )
+screen.blit(img, (300, 300))
+
+pygame.display.update()
+
+time.sleep(1.5)
