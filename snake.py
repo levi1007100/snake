@@ -13,7 +13,7 @@ from pygame.locals import *
 pygame.init()
 pygame.display.set_caption("snake")
 
-WINDOW_SIZE=(800,800)
+WINDOW_SIZE=(860,860)
 screen=pygame.display.set_mode(WINDOW_SIZE,0,32)
 
 
@@ -61,9 +61,10 @@ def render_field():
                 color=(0,0,0)
             if(field[row][column]=="*"):
                 color=fruit_color
-            pygame.draw.rect(screen,color,pygame.Rect(WINDOW_SIZE[1]/column_length*column,
-            WINDOW_SIZE[0]/row_length*row,WINDOW_SIZE[1]/column_length,
-            WINDOW_SIZE[0]/row_length))
+            pygame.draw.rect(screen,color,pygame.Rect(int(WINDOW_SIZE[1]/
+            column_length*column),
+            int(WINDOW_SIZE[0]/row_length*row),int(WINDOW_SIZE[1]/column_length),
+            int(WINDOW_SIZE[0]/row_length)))
 
 
 
@@ -148,7 +149,7 @@ snake_body=define_snake_body()
 score = 0
 font = pygame.font.SysFont(None, 100)
 
-
+generate_fruit()
 while 1:
     screen.fill((0,0,0))
 
